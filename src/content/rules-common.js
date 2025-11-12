@@ -247,12 +247,12 @@
 
     if (a.domCmp(domCmpWhitelist, true) || a.domInc(domIncWhitelist, true)) {
 
-        console.log("[Nano] Excluded :: All Generically Applied Solutions");
+        window.nanoConsole.log("[Nano] Excluded :: All Generically Applied Solutions");
 
     } else {
 
         if (false) {
-            console.log("[Nano] Excluded :: Common Generic Solutions");
+            window.nanoConsole.log("[Nano] Excluded :: Common Generic Solutions");
         } else {
             a.generic();
         }
@@ -271,25 +271,25 @@
             // https://github.com/uBlockOrigin/uAssets/issues/6553
             "cutlinks",
         ], true)) {
-            console.log("[Nano] Excluded :: Adfly Skipper");
+            window.nanoConsole.log("[Nano] Excluded :: Adfly Skipper");
         } else {
             a.generic.Adfly();
         }
 
         if (false) {
-            console.log("[Nano] Excluded :: Adfly Forced Notification Blocker");
+            window.nanoConsole.log("[Nano] Excluded :: Adfly Forced Notification Blocker");
         } else {
             a.generic.AdflyForcedNotification();
         }
 
         if (false) {
-            console.log("[Nano] Excluded :: app_vars Defuser");
+            window.nanoConsole.log("[Nano] Excluded :: app_vars Defuser");
         } else {
             a.generic.app_vars();
         }
 
         if (false) {
-            console.log("[Nano] Excluded :: Cloudflare Apps Defuser");
+            window.nanoConsole.log("[Nano] Excluded :: Cloudflare Apps Defuser");
         } else {
             a.generic.CloudflareApps();
         }
@@ -325,7 +325,7 @@
 
     if (false) {
         a.uBOExtraExcluded = true;
-        console.log("[Nano] Excluded :: uBO-Extra");
+        window.nanoConsole.log("[Nano] Excluded :: uBO-Extra");
     }
 
     // ------------------------------------------------------------------------------------------------------------- //

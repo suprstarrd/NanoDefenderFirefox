@@ -28,6 +28,9 @@
 
 a.init = () => {
 
+    // Default console is ON.
+    a.register(a.allowConsole);
+
     // ------------------------------------------------------------------------------------------------------------- //
 
     // Internal messaging
@@ -35,6 +38,28 @@ a.init = () => {
     chrome.runtime.onMessage.addListener((msg, sender, res) => {
         if (msg instanceof Object === false || sender instanceof Object === false || typeof res !== "function")
             return;
+
+        if (typeof msg.cmd === "string") {
+            // commands for handling content script
+            switch (msg.cmd) {
+                case "toggle console":
+                    a.allowConsole = msg.status;
+                    a.register();
+                    return;     
+                case "toggle debug":
+                    a.debugRule = msg.status;
+                    a.register();
+                    return;
+                case "get status":
+                    res({
+                        "status": a.allowConsole,
+                        "debug": a.debugRule
+                    });
+                    return;
+                default:
+
+            }
+        }
 
         if (typeof msg.cmd !== "string" || sender.tab instanceof Object === false)
             return;
@@ -211,6 +236,67 @@ a.init = () => {
 
 // ----------------------------------------------------------------------------------------------------------------- //
 
+/**
+ * Whether console message is activated (default: true)
+ * @var {boolean}
+ */
+a.allowConsole = true;
+
+/**
+ * Whether Debug rule is activated (default: false)
+ * @var {boolean}
+ */
+a.debugRule = false;
+
+/**
+ * Record the registered content script (default: true)
+ * @var {Object}
+ */
+a.registered = null;
+
+/**
+ * Register content script
+ * @function
+ */
+ a.register = async () => {
+    let scripts = [
+        {"file": `content/${a.allowConsole ? "" : "un"}console.js`},
+        {"file": "content/rules-common.js"},
+        {"file": "content/rules-specific.js"},
+        {"file": "content/rules-sticky.js"}
+    ];
+    if (a.debugRule) {
+        scripts.push({"file": "content/debug.js"});
+    }
+    scripts.push({
+        "code": 
+            `"use strict";
+            {
+                a.inject(() => {
+                    "use strict";
+                    delete window.nanoConsole;
+                });
+            }`
+    });
+    if (a.registered) a.registered.unregister();
+    a.registered = await browser.contentScripts.register({
+        "allFrames": true,
+        "js": scripts,
+        "matchAboutBlank": true,
+        "matches": [
+            "http://*/*",
+            "https://*/*"
+        ],
+        "runAt": "document_start"
+    });
+};
+
+/*****************************************************************************/
+
+/**
+ * Check chrome.runtime.lastError and do nothing.
+ * @function
+ */
 a.noopErr = () => {
     void chrome.runtime.lastError;
 };
@@ -461,7 +547,8 @@ a.xhr = (details, onload, onerror) => {
     if (details.method !== "GET" && details.method !== "POST")
         return false;
 
-    console.log("[Nano] Cross Origin Request ::", details.url);
+    if (a.allowConsole)
+        console.log("[Nano] Cross Origin Request ::", details.url);
 
     const req = new XMLHttpRequest();
 

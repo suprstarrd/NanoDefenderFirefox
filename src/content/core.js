@@ -40,7 +40,7 @@ a.isTopFrame = (() => {
 // ----------------------------------------------------------------------------------------------------------------- //
 
 a.init = () => {
-    console.log(`[Nano] Nano Defender Activated :: ${document.domain}`);
+    window.nanoConsole.log(`[Nano] Nano Defender Activated :: ${document.domain}`);
 };
 
 // ----------------------------------------------------------------------------------------------------------------- //
@@ -52,9 +52,9 @@ a.strEscape = (() => {
 
 a.err = (name) => {
     if (name)
-        console.error(`[Nano] Generic Solution Triggered :: ${name}`);
+        window.nanoConsole.error(`[Nano] Generic Solution Triggered :: ${name}`);
     else
-        console.error("[Nano] Specific Solution Triggered");
+        window.nanoConsole.error("[Nano] Specific Solution Triggered");
 };
 
 a.domCmp = (domList, noErr = false) => {
@@ -214,11 +214,11 @@ a.inject = (payload, isReady = false) => {
         document.documentElement.prepend(s);
         s.remove();
     } catch (err) {
-        console.error("[Nano] Failed :: Inject Standalone Script");
+        window.nanoConsole.error("[Nano] Failed :: Inject Standalone Script");
 
         //@pragma-if-debug
         if (a.debugMode)
-            console.log(s.textContent);
+            window.nanoConsole.log(s.textContent);
         //@pragma-end-if
     }
 };
@@ -255,11 +255,11 @@ a.injectWithRuntime = (payload, isReady = false) => {
         document.documentElement.prepend(s);
         s.remove();
     } catch (err) {
-        console.error("[Nano] Failed :: Inject Script With Runtime");
+        window.nanoConsole.error("[Nano] Failed :: Inject Script With Runtime");
 
         //@pragma-if-debug
         if (a.debugMode)
-            console.log(s.textContent);
+            window.nanoConsole.log(s.textContent);
         //@pragma-end-if
     }
 };
@@ -368,9 +368,9 @@ a.antiCollapse = (name, filter) => {
         "use strict";
         const handler = ${filter};
 
-        const log = window.console.log.bind(window.console);
-        const warn = window.console.warn.bind(window.console);
-        const error = window.console.error.bind(window.console);
+        const log = window.nanoConsole.log.bind(window.nanoConsole);
+        const warn = window.nanoConsole.warn.bind(window.nanoConsole);
+        const error = window.nanoConsole.error.bind(window.nanoConsole);
         const String = window.String.bind(window);
 
         try {
@@ -417,9 +417,9 @@ a.filter = (name, method, filter, parent = "window") => {
         "use strict";
         const matcher = ${a.getMatcher(method, filter)};
 
-        const log = window.console.log.bind(window.console);
-        const warn = window.console.warn.bind(window.console);
-        const error = window.console.error.bind(window.console);
+        const log = window.nanoConsole.log.bind(window.nanoConsole);
+        const warn = window.nanoConsole.warn.bind(window.nanoConsole);
+        const error = window.nanoConsole.error.bind(window.nanoConsole);
 
         let parent, original;
         const newFunc = (...args) => {
@@ -457,9 +457,9 @@ a.timewarp = (timer, method, filter, ratio = 0.02) => {
         "use strict";
         const matcher = ${a.getMatcher(method, filter)};
 
-        const log = window.console.log.bind(window.console);
-        const warn = window.console.warn.bind(window.console);
-        const error = window.console.error.bind(window.console);
+        const log = window.nanoConsole.log.bind(window.nanoConsole);
+        const warn = window.nanoConsole.warn.bind(window.nanoConsole);
+        const error = window.nanoConsole.error.bind(window.nanoConsole);
 
         let original;
         const newFunc = (...args) => {
@@ -508,11 +508,11 @@ a.readOnly = (name, val, parent = "window") => {
 
             //@pragma-if-debug
             if (${a.debugMode}) {
-                window.console.log("[Nano] Read-only Property :: ${strParent}.${name}");
+                window.nanoConsole.log("[Nano] Read-only Property :: ${strParent}.${name}");
             }
             //@pragma-end-if
         } catch (err) {
-            window.console.error("[Nano] Failed :: Read-only Property ${strParent}.${name}");
+            window.nanoConsole.error("[Nano] Failed :: Read-only Property ${strParent}.${name}");
         }
     })();`, true);
 };
@@ -546,11 +546,11 @@ a.noAccess = (name, parent = "window") => {
 
             //@pragma-if-debug
             if (${a.debugMode}) {
-                window.console.log("[Nano] Non-accessible Property :: ${strParent}.${name}");
+                window.nanoConsole.log("[Nano] Non-accessible Property :: ${strParent}.${name}");
             }
             //@pragma-end-if
         } catch (err) {
-            window.console.error("[Nano] Failed :: Non-accessible Property ${strParent}.${name}");
+            window.nanoConsole.error("[Nano] Failed :: Non-accessible Property ${strParent}.${name}");
         }
     })();`, true);
 };
@@ -562,7 +562,7 @@ a.noAccessExt = (chain) => {
         //Based on uAssets
         //License: https://github.com/uBlockOrigin/uAssets/blob/master/LICENSE
         "use strict";
-        const error = window.console.error.bind(window.console);
+        const error = window.nanoConsole.error.bind(window.nanoConsole);
         const err = new window.Error("[Nano] Blocked :: Property Access");
         const Object = window.Object.bind(window);
         const descriptor = window.Object.getOwnPropertyDescriptor.bind(window.Object);
@@ -626,7 +626,7 @@ a.noAccessExt = (chain) => {
 
         try {
             proxy(window, "${chain}");
-            window.console.log("[Nano] Non-accessible Property :: ${chain}");
+            window.nanoConsole.log("[Nano] Non-accessible Property :: ${chain}");
         } catch (err) {
             error("[Nano] Failed :: Non-accessible Property ${chain}");
         }
@@ -648,7 +648,7 @@ a.redirectToParam = (key) => {
         try {
             location.href = href;
         } catch (err) {
-            console.error("[Nano] Failed :: Redirect To Param");
+            window.nanoConsole.error("[Nano] Failed :: Redirect To Param");
         }
     }
 };
@@ -719,7 +719,7 @@ a.loopbackXHR = (server) => {
             original = window.XMLHttpRequest;
             window.XMLHttpRequest = newXHR;
         } catch (err) {
-            window.console.error("[Nano] Failed :: XMLHttpRequest Loopback Engine");
+            window.nanoConsole.error("[Nano] Failed :: XMLHttpRequest Loopback Engine");
         }
     })();`, true);
 };
@@ -762,7 +762,7 @@ a.replaceXHR = (handler) => {
                 return _open.call(this, method, url, ...rest);
             };
         } catch (err) {
-            window.console.error("[Nano] Failed :: XMLHttpRequest Replace Engine");
+            window.nanoConsole.error("[Nano] Failed :: XMLHttpRequest Replace Engine");
         }
     })();`, true);
 };
@@ -805,8 +805,8 @@ a.generic = () => {
 
     a.ready(() => {
         // AdBlock Alerter (WP)
-        if ($("div.adb_overlay > div.adb_modal_img").length) {
-            $("div.adb_overlay").remove();
+        if (cssSelect("div.adb_overlay > div.adb_modal_img").length) {
+            cssSelect("div.adb_overlay").remove();
             a.css("html, body { height:auto; overflow:auto; }");
             a.err("AdBlock Alerter");
         }
@@ -819,7 +819,7 @@ a.generic = () => {
                 elem.innerHTML === "disable ad blocking or use another browser without any adblocker when you visit"
             ) {
                 elem.remove();
-                console.error("[Nano] Generic Solution Triggered :: Generic Block Screens");
+                window.nanoConsole.error("[Nano] Generic Solution Triggered :: Generic Block Screens");
             }
         }
     });
@@ -900,7 +900,7 @@ a.generic = () => {
 
         const data = {};
 
-        const error = window.console.error.bind(window.console);
+        const error = window.nanoConsole.error.bind(window.nanoConsole);
 
         const err = (name) => {
             error(`[Nano] Generic Solution Triggered :: ${name}`);
@@ -1210,7 +1210,7 @@ a.generic.FuckAdBlock = (constructorName, instanceName) => {
     a.inject(`(() => {
         "use strict";
         const errMsg = "[Nano] Generic Solution Triggered :: FuckAdBlock";
-        const error = window.console.error.bind(window.console);
+        const error = window.nanoConsole.error.bind(window.nanoConsole);
         const timer = window.setTimeout.bind(window);
         const patchedFuckAdBlock = function () {
             // Based on FuckAdBlock
@@ -1321,7 +1321,7 @@ a.generic.FuckAdBlock = (constructorName, instanceName) => {
                 },
             });
         } catch (err) {
-            window.console.error("[Nano] Failed :: FuckAdBlock Defuser");
+            window.nanoConsole.error("[Nano] Failed :: FuckAdBlock Defuser");
         }
     })();`, true);
 };
@@ -1393,7 +1393,7 @@ a.generic.Adfly = () => {
                 },
             });
         } catch (err) {
-            window.console.error("[Nano] Failed :: Adfly Skipper");
+            window.nanoConsole.error("[Nano] Failed :: Adfly Skipper");
         }
     });
 };
@@ -1413,7 +1413,7 @@ a.generic.AdflyForcedNotification = () => {
                     try {
                         location.href = dest;
                     } catch (err) {
-                        console.error("[Nano] Failed :: Adfly Forced Notification Blocker");
+                        window.nanoConsole.error("[Nano] Failed :: Adfly Forced Notification Blocker");
                     }
                 }
             }
@@ -1451,7 +1451,7 @@ a.generic.app_vars = () => {
                 },
             });
         } catch (err) {
-            window.console.error("[Nano] Failed :: app_vars Defuser");
+            window.nanoConsole.error("[Nano] Failed :: app_vars Defuser");
         }
     });
 };
@@ -1460,7 +1460,7 @@ a.generic.CloudflareApps = () => {
     a.inject(() => {
         "use strict";
         try {
-            const error = window.console.error.bind(window.console);
+            const error = window.nanoConsole.error.bind(window.nanoConsole);
             const badApps = new window.Set([
                 "RVaR_vPwa0_9", // AdBlock Blocker
                 "ngqhM7rZolNP", // AdBlock Minus
@@ -1496,7 +1496,7 @@ a.generic.CloudflareApps = () => {
                 },
             });
         } catch (err) {
-            window.console.error("[Nano] Failed :: Cloudflare Apps Defuser");
+            window.nanoConsole.error("[Nano] Failed :: Cloudflare Apps Defuser");
         }
     });
 };
@@ -1505,7 +1505,7 @@ a.generic.CloudflareApps = () => {
 a.generic.adsjsV2 = (min = 11, max = 14) => {
     a.inject(`(() => {
         "use strict";
-        const error = window.console.error.bind(window.console);
+        const error = window.nanoConsole.error.bind(window.nanoConsole);
         const matcher = /^[a-zA-Z0-9]{${min},${max}}$/;
         const err = new window.TypeError("Failed to execute 'getElementById' on 'Document': " +
             "1 argument required, but only 0 present.");
@@ -1544,14 +1544,14 @@ a.generic.adsjsV2 = (min = 11, max = 14) => {
 
 a.trace = (name, parent = "window") => {
     if (!a.debugMode) {
-        console.error("a.trace() is only available in debug mode!");
+        window.nanoConsole.error("a.trace() is only available in debug mode!");
         return;
     }
     name = a.strEscape(name);
     const strParent = a.strEscape(parent);
     a.inject(`(() => {
         "use strict";
-        const trace = window.console.trace.bind(window.console);
+        const trace = window.nanoConsole.trace.bind(window.nanoConsole);
         let val;
         try {
             val = ${parent}["${name}"];
@@ -1567,14 +1567,14 @@ a.trace = (name, parent = "window") => {
                 },
             });
         } catch (err) {
-            window.console.error("[Nano] Failed :: Trace Property ${strParent}.${name}");
+            window.nanoConsole.error("[Nano] Failed :: Trace Property ${strParent}.${name}");
         }
     })();`, true);
 };
 
 a.backgroundLog = (log) => {
     if (!a.debugMode) {
-        console.error("a.backgroundLog() is only available in debug mode!");
+        window.nanoConsole.error("a.backgroundLog() is only available in debug mode!");
         return;
     }
     chrome.runtime.sendMessage({
@@ -1585,14 +1585,14 @@ a.backgroundLog = (log) => {
 
 a.setBenchmarkedInterval = (func, delay, ...args) => {
     if (!a.debugMode) {
-        console.error("a.setBenchmarkedInterval() should only be used in debug mode!");
+        window.nanoConsole.error("a.setBenchmarkedInterval() should only be used in debug mode!");
         return setInterval(func, delay, ...args);
     }
     return setInterval(() => {
         const t0 = performance.now();
         func(...args);
         const t1 = performance.now();
-        console.log(`[Nano] Benchmark Interval :: ${func.name} Used ${t1 - t0} Milliseconds`);
+        window.nanoConsole.log(`[Nano] Benchmark Interval :: ${func.name} Used ${t1 - t0} Milliseconds`);
     }, delay);
 };
 
